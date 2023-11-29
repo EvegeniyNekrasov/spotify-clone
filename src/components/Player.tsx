@@ -1,5 +1,6 @@
 import type React from "react"
 import { useEffect, useRef, useState } from "react"
+import { usePlayerStore } from "@/store/playerStore"
 
 interface ButtonProps {
   className: string
@@ -63,7 +64,7 @@ export const Volume = () => (
 )
 
 export function Player() {
-  const [isPlaying, setIsPlaying] = useState(false)
+  const { isPlaying, setIsPlaying } = usePlayerStore((state) => state)
   const [currentSong, setCurrentSong] = useState(null)
   const audioRef = useRef<HTMLAudioElement>(null)
 
