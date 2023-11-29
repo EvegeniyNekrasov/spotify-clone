@@ -1,5 +1,5 @@
 import type React from "react"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 interface ButtonProps {
   className: string
@@ -67,12 +67,17 @@ export function Player() {
   const [currentSong, setCurrentSong] = useState(null)
   const audioRef = useRef<HTMLAudioElement>(null)
 
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.src = `/music/1/01.mp3`
+    }
+  }, [])
+
   const handleClick = () => {
     if (isPlaying) {
       audioRef.current?.pause()
     } else {
       if (audioRef.current) {
-        audioRef.current.src = `/music/1/01.mp3`
         audioRef.current.play()
         audioRef.current.volume = 0.1
       }
@@ -93,10 +98,10 @@ export function Player() {
               <Play className="text-black" />
             )}
           </button>
+          <audio ref={audioRef} />
         </div>
       </div>
       <div className="grid place-content-center"></div>
-      <audio ref={audioRef} />
     </div>
   )
 }
