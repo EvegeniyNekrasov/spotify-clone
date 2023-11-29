@@ -1,4 +1,11 @@
-export const Pause = ({ className }) => (
+import type React from "react"
+import { useRef, useState } from "react"
+
+interface ButtonProps {
+  className: string
+}
+
+export const Pause: React.FC<ButtonProps> = ({ className }) => (
   <svg
     className={className}
     role="img"
@@ -11,7 +18,7 @@ export const Pause = ({ className }) => (
   </svg>
 )
 
-export const Play = ({ className }) => (
+export const Play: React.FC<ButtonProps> = ({ className }) => (
   <svg
     className={className}
     role="img"
@@ -56,11 +63,40 @@ export const Volume = () => (
 )
 
 export function Player() {
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [currentSong, setCurrentSong] = useState(null)
+  const audioRef = useRef<HTMLAudioElement>(null)
+
+  const handleClick = () => {
+    if (isPlaying) {
+      audioRef.current?.pause()
+    } else {
+      if (audioRef.current) {
+        audioRef.current.src = `/music/1/01.mp3`
+        audioRef.current.play()
+        audioRef.current.volume = 0.1
+      }
+    }
+
+    setIsPlaying(!isPlaying)
+  }
+
   return (
     <div className="flex flex-row justify-between w.full px-4 z-50">
       <div>current song...</div>
-      <div>reproductor</div>
-      <div>volumen</div>
+      <div className="grid place-content-center gap-4 flex-1">
+        <div className="flex justify-center">
+          <button className="bg-white rounded-full p-2" onClick={handleClick}>
+            {isPlaying ? (
+              <Pause className="text-black" />
+            ) : (
+              <Play className="text-black" />
+            )}
+          </button>
+        </div>
+      </div>
+      <div className="grid place-content-center"></div>
+      <audio ref={audioRef} />
     </div>
   )
 }
